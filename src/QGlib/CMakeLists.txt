@@ -39,12 +39,13 @@ set(QtGLib_CODEGEN_INCLUDES
 # Setup the environment
 set(QTGLIB_API_VERSION 2.0)
 set(QTGLIB_SOVERSION 0)
-include_directories(${GOBJECT_INCLUDE_DIR} ${GLIB2_INCLUDE_DIR})
+include_directories(${GOBJECT_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS})
 
 # Add command to generate gen.cpp using codegen
 run_codegen("QGlib" "${QtGLib_CODEGEN_INCLUDES}" "${QtGLib_CODEGEN_HEADERS}")
 
 # Build and link QtGLib
+link_directories(${GOBJECT_LIBRARY_DIRS})
 add_library(${QTGLIB_LIBRARY} ${SHARED_OR_STATIC} ${QtGLib_SRCS})
 set_target_properties(${QTGLIB_LIBRARY} PROPERTIES OUTPUT_NAME ${QTGLIB_LIBRARY}-${QTGLIB_API_VERSION}
                                           SOVERSION ${QTGLIB_SOVERSION}

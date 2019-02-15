@@ -78,14 +78,23 @@ endif()
 set(QTGSTREAMER_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src)
 include(QtGStreamerConfigCommon)
 
-find_package(GStreamer 1.2.0 COMPONENTS base)
+#find_package(GStreamer 1.2.0 COMPONENTS base)
+find_package(PkgConfig)
+pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0>=1.4) 
+pkg_check_modules(GSTREAMER_BASE_LIBRARY REQUIRED gstreamer-base-1.0>=1.4)
+
 macro_log_feature(GSTREAMER_FOUND "GStreamer" "Required to build QtGStreamer"
                                   "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
 macro_log_feature(GSTREAMER_BASE_LIBRARY_FOUND "GStreamer base library"
                                                "Used for building the ${QTVIDEOSINK_NAME} element"
                                                "http://gstreamer.freedesktop.org/" FALSE "1.2.0")
 
-find_package(GStreamerPluginsBase 1.2.0 COMPONENTS app audio video pbutils)
+#find_package(GStreamerPluginsBase 1.2.0 COMPONENTS app audio video pbutils)
+pkg_check_modules(GSTREAMER_AUDIO_LIBRARY REQUIRED gstreamer-audio-1.0>=1.4)
+pkg_check_modules(GSTREAMER_VIDEO_LIBRARY REQUIRED gstreamer-video-1.0>=1.4)
+pkg_check_modules(GSTREAMER_APP_LIBRARY REQUIRED gstreamer-app-1.0>=1.4)
+pkg_check_modules(GSTREAMER_PBUTILS_LIBRARY REQUIRED gstreamer-pbutils-1.0>=1.4)
+
 macro_log_feature(GSTREAMER_APP_LIBRARY_FOUND "GStreamer app library"
                                               "Required to build QtGStreamerUtils"
                                               "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
@@ -99,10 +108,27 @@ macro_log_feature(GSTREAMER_PBUTILS_LIBRARY_FOUND "GStreamer pbutils library"
                                                 "Used for building the Discoverer API"
                                                 "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
 
-find_package(GLIB2)
+pkg_check_modules(GLIB2 REQUIRED glib-2.0)
+#find_package(GLIB2)
 macro_log_feature(GLIB2_FOUND "GLib" "Required to build QtGLib" "http://www.gtk.org/" TRUE)
 
-find_package(GObject)
+find_program(GLIB2_GENMARSHAL_UTIL glib-genmarshal)
+
+macro(glib2_genmarshal output_name)
+    file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/genmarshal_tmp)
+    foreach(_declaration ${ARGN})
+        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/genmarshal_tmp "${_declaration}\n")
+    endforeach()
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${output_name}.h ${CMAKE_CURRENT_BINARY_DIR}/${output_name}.c
+        COMMAND ${GLIB2_GENMARSHAL_UTIL} --header genmarshal_tmp > ${output_name}.h
+        COMMAND ${GLIB2_GENMARSHAL_UTIL} --body genmarshal_tmp > ${output_name}.c
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+endmacro()
+
+#find_package(GObject)
+pkg_check_modules(GOBJECT REQUIRED gobject-2.0)
 macro_log_feature(GOBJECT_FOUND "GObject" "Required to build QtGLib" "http://www.gtk.org/" TRUE)
 
 set(CMAKE_REQUIRED_INCLUDES ${QTGSTREAMER_INCLUDES})
