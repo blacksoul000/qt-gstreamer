@@ -10,7 +10,7 @@ add_definitions(-DPACKAGE="qt-gstreamer"
 
 include_directories(${GSTREAMER_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIR})
 
-if (GSTREAMER_BASE_LIBRARY_FOUND AND GSTREAMER_VIDEO_LIBRARY_FOUND)
+if (GSTREAMER_BASE_LIBRARY_FOUND AND GSTREAMER_VIDEO_FOUND)
     include_directories(${GSTREAMER_BASE_INCLUDE_DIR} ${GSTREAMER_VIDEO_INCLUDE_DIR})
     add_subdirectory(gstqtvideosink)
 endif()

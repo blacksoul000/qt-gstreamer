@@ -5,9 +5,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${QTGSTREAMER_FLAGS}")
 
 macro(qgst_test target)
     add_executable(${target} "${target}.cpp")
-    target_link_libraries(${target} ${GSTREAMER_LIBRARY} ${GOBJECT_LIBRARIES}
-                                    ${QTGSTREAMER_LIBRARIES}
-                                    ${GSTREAMER_PBUTILS_LIBRARY})
+    target_link_libraries(${target} ${GSTREAMER_LDFLAGS} ${GOBJECT_LDFLAGS}
+                                    ${QTGSTREAMER_LDFLAGS}
+                                    ${GSTREAMER_PBUTILS_LDFLAGS})
     qt4or5_use_modules(${target} Test)
     add_test(NAME ${target} COMMAND ${target})
 endmacro(qgst_test)
@@ -36,7 +36,7 @@ qgst_test(padtest)
 
 if(TARGET Qt5GStreamerQuick)
     add_executable(qtquick2test qtquick2test.cpp)
-    target_link_libraries(qtquick2test Qt5::Qml Qt5GStreamerQuick ${QTGSTREAMER_LIBRARIES})
+    target_link_libraries(qtquick2test Qt5::Qml Qt5GStreamerQuick ${QTGSTREAMER_LDFLAGS})
     qt4or5_use_modules(qtquick2test Test)
     add_test(NAME qtquick2test
              COMMAND cmake -E env QML2_IMPORT_PATH=${CMAKE_BINARY_DIR}/src/qml/quick2/:$ENV{QML2_IMPORT_PATH} GST_PLUGIN_PATH=${CMAKE_BINARY_DIR}/elements/gstqtvideosink/:$ENV{GST_PLUGIN_PATH} ${CMAKE_CURRENT_BINARY_DIR}/qtquick2test

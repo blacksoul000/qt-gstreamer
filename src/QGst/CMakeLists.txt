@@ -168,17 +168,23 @@ endif()
 run_codegen("QGst" "${QtGStreamer_CODEGEN_INCLUDES}" "${QtGStreamer_CODEGEN_HEADERS}")
 
 # Build and link QtGStreamer
-link_directories(${GSTREAMER_LIBRARY_DIRS})
 add_library(${QTGSTREAMER_LIBRARY} ${SHARED_OR_STATIC} ${QtGStreamer_SRCS})
 set_target_properties(${QTGSTREAMER_LIBRARY} PROPERTIES OUTPUT_NAME ${QTGSTREAMER_LIBRARY}-${QTGSTREAMER_API_VERSION}
                                                SOVERSION ${QTGSTREAMER_SOVERSION}
                                                  VERSION ${QTGSTREAMER_VERSION})
 target_link_libraries(${QTGSTREAMER_LIBRARY} LINK_PUBLIC ${QTGLIB_LIBRARY})
-target_link_libraries(${QTGSTREAMER_LIBRARY} LINK_PRIVATE ${GOBJECT_LIBRARIES}
-                                  ${GSTREAMER_LIBRARY}
-                                  ${GSTREAMER_AUDIO_LIBRARY}
-                                  ${GSTREAMER_VIDEO_LIBRARY}
-                                  ${GSTREAMER_PBUTILS_LIBRARY})
+target_link_libraries(${QTGSTREAMER_LIBRARY} LINK_PRIVATE 
+                                  ${GOBJECT_LDFLAGS}
+                                  ${GLIB2_LDFLAGS}
+                                  ${GSTREAMER_LDFLAGS}
+                                  ${GSTREAMER_AUDIO_LDFLAGS}
+                                  ${GSTREAMER_PBUTILS_LDFLAGS}
+                                  ${GSTREAMER_BASE_LDFLAGS}
+                                  ${GSTREAMER_VIDEO_LDFLAGS}
+                                  ${GMODULE_LDFLAGS}
+                                  ${ORC_LDFLAGS}
+                                  ffi iconv log)
+
 qt4or5_use_modules(${QTGSTREAMER_LIBRARY} LINK_PUBLIC Core)
 
 # Build and link QtGStreamerQuick
@@ -210,7 +216,12 @@ set_target_properties(${QTGSTREAMER_UTILS_LIBRARY} PROPERTIES OUTPUT_NAME ${QTGS
                                                     SOVERSION ${QTGSTREAMER_UTILS_SOVERSION}
                                                       VERSION ${QTGSTREAMER_VERSION})
 target_link_libraries(${QTGSTREAMER_UTILS_LIBRARY} LINK_PUBLIC ${QTGSTREAMER_LIBRARY})
-target_link_libraries(${QTGSTREAMER_UTILS_LIBRARY} LINK_PRIVATE ${GSTREAMER_LIBRARY} ${GSTREAMER_APP_LIBRARY})
+target_link_libraries(${QTGSTREAMER_UTILS_LIBRARY} LINK_PRIVATE ${GSTREAMER_LDFLAGS} 
+                                                                ${GSTREAMER_APP_LDFLAGS} 
+                                                                ${GSTREAMER_AUDIO_LDFLAGS}
+                                                                ${GMODULE_LDFLAGS}
+                                                                ${ORC_LDFLAGS} 
+                                                                ffi iconv log)
 qt4or5_use_modules(${QTGSTREAMER_UTILS_LIBRARY} LINK_PRIVATE Core)
 
 # Install

@@ -67,13 +67,12 @@ if (GstQtVideoSink_LINK_OPENGL)
     endif()
 endif()
 
-link_directories(${GSTREAMER_LIBRARY_DIRS})
 add_library(gst${QTVIDEOSINK_NAME} MODULE ${GstQtVideoSink_SRCS})
 target_link_libraries(gst${QTVIDEOSINK_NAME}
-    ${GOBJECT_LIBRARIES}
-    ${GSTREAMER_LIBRARY}
-    ${GSTREAMER_BASE_LIBRARY}
-    ${GSTREAMER_VIDEO_LIBRARY}
+    ${GOBJECT_LDFLAGS}
+    ${GSTREAMER_LDFLAGS}
+    ${GSTREAMER_BASE_LDFLAGS}
+    ${GSTREAMER_VIDEO_LDFLAGS}
     ${GstQtVideoSink_GL_LIBS}
 )
 qt4or5_use_modules(gst${QTVIDEOSINK_NAME} Core Gui Widgets)
